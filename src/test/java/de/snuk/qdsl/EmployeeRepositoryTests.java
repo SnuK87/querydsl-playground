@@ -14,11 +14,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Import({ EmployeeRepositorySupport.class, QueryDslConfiguration.class })
-public class EmployeeRepositorySupportTests {
+@Import({ EmployeeRepositorySupportImpl.class, QueryDslConfiguration.class })
+public class EmployeeRepositoryTests {
 
 	@Autowired
-	private EmployeeRepositorySupport repo;
+	private EmployeeRepository repo;
 	
 	@Before
 	public void setUp() throws Exception {

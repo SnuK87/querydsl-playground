@@ -9,4 +9,5 @@ public class QuerydslPlaygroundApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuerydslPlaygroundApplication.class, args);
 	}
+
 }
