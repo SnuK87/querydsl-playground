@@ -1,40 +1,59 @@
+## Introduction
 
+Spring-Data makes it really easy to implement the persistence layer of your application but when your domain model becomes more complex then also your queries will and you can't rely on the spring data query derivation mechanism anymore. Therefore you have to implement JPQL or native queries by using the `@Query` annotation. But there are some major drawbacks like:
+
+- **Error-prone**: Handwrititen queries are a source for typos and cumbersome to write/read because of the not optimal formatting of multiline strings in Java (Hopefully will become better with [JEP-355]( https://openjdk.java.net/jeps/355 )). 
+- **No type safety**: Type safety will be lost when writing queries as strings. This can lead to errors at runtime.
+- **Hard to maintain**: When we change a column of an entity we also have to change the query string. The  IDE or the compiler are not able to detect those changes, therefore it is easy to run into errors at runtime.
+
+
+
+To avoid those problems I will explain how to use a framework called [Querydsl](http://www.querydsl.com/) together with spring-data-jpa. The complete code of the demo application is available on [github](https://github.com/SnuK87/querydsl-playground).
+
+> Querydsl is a framework which enables the construction of statically typed SQL-like queries. Instead of writing queries as inline strings or externalizing them into XML files they can be constructed via a fluent API like Querydsl. 
+
+
+
+## Setup
 
 In order to use Querydsl in your project you just have to add the following dependencies and a maven plugin to you `pom.xml`.
 
 ```xml
-		<dependency>
-​			<groupId>com.querydsl</groupId>
-​			<artifactId>querydsl-apt</artifactId>
-			<scope>provided</scope>	
-​		</dependency>
-​		<dependency>
-​			<groupId>com.querydsl</groupId>
-​			<artifactId>querydsl-jpa</artifactId>
-​		</dependency>
+<dependency>
+​	<groupId>com.querydsl</groupId>
+​	<artifactId>querydsl-apt</artifactId>
+	<scope>provided</scope>	
+​</dependency>
+
+​<dependency>
+​	<groupId>com.querydsl</groupId>
+​	<artifactId>querydsl-jpa</artifactId>
+​</dependency>
 ```
 
 The maven APT plugin with the `JPAAnnotationProcessor` scans your project for `@Entity` annotated classes and generates a corresponding query type that is prefixed with a `Q. Run `mvn clean compile` or build the project with eclipse to execute the plugin and generate the query types.
 ```xml
-			<plugin>
-				<groupId>com.mysema.maven</groupId>
-				<artifactId>apt-maven-plugin</artifactId>
-				<version>1.1.3</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>process</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/generated-sources/java</outputDirectory>
-							<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+<plugin>
+	<groupId>com.mysema.maven</groupId>
+	<artifactId>apt-maven-plugin</artifactId>
+	<version>1.1.3</version>
+	<executions>
+		<execution>
+			<goals>
+				<goal>process</goal>
+			</goals>
+			<configuration>
+				<outputDirectory>target/generated-sources/java</outputDirectory>
+				<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+			</configuration>
+		</execution>
+	</executions>
+</plugin>
 ```
 
 To write queries with Querydsl we need to autowire an instance of `JPAQueryFactory` into our repository implementation class. For that we can simply create a configuration class and create a `@Bean`.
+
+##  Configuration
 
 ```java
 @Configuration
@@ -49,14 +68,17 @@ public class QueryDslConfiguration {
 	}
 }
 ```
-3. entities
+
+## Domain model
+
 ![er-diagram](er.PNG)
 
 
-4. repos
+## Implementation
+
 To combine the magic of the spring `JpaRepository` and Querydsl we have to create a new interface for our Querydsl powered queries first.
 
-``java
+```java
 interface EmployeeRepositorySupport {
 
 	List<Employee> findByOrganizationId(Long organizationId);
