@@ -71,13 +71,13 @@ public class QueryDslConfiguration {
 
 ## Domain model
 
-Our domain model contains four entities:
+Our domain model consists of four entities:
 - Organization: An organization contains many departments
 - Department: A department belongs to one organization and has many employees
 - Employee: An employee is working for one department and has many roles
 - Role: Each employee can have many roles
 
-![er-diagram](er.PNG)
+![Domain model](er.PNG)
 
 
 ## Implementation
