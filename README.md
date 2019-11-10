@@ -1,5 +1,5 @@
 ## Introduction
-
+	
 Spring-Data makes it really easy to implement the persistence layer of your application but when your domain model becomes more complex then also your queries will and you can't rely on the spring data query derivation mechanism anymore. Therefore you have to implement JPQL or native queries by using the `@Query` annotation. But there are some major drawbacks like:
 
 - **Error-prone**: Handwrititen queries are a source for typos and cumbersome to write/read because of the not optimal formatting of multiline strings in Java (Hopefully will become better with [JEP-355]( https://openjdk.java.net/jeps/355 )). 
@@ -70,6 +70,12 @@ public class QueryDslConfiguration {
 ```
 
 ## Domain model
+
+Our domain model contains four entities:
+- Organization: An organization contains many departments
+- Department: A department belongs to one organization and has many employees
+- Employee: An employee is working for one department and has many roles
+- Role: Each employee can have many roles
 
 ![er-diagram](er.PNG)
 
