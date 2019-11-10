@@ -18,5 +18,4 @@ public class EmployeeDto {
 		this.name = name;
 		this.departmentId = departmentId;
 	}
-	
 }
